@@ -1,0 +1,102 @@
+*, html, body {
+	margin:0;
+	padding:0;
+	font-family:arial;
+}
+a {
+	text-decoration: none;
+}
+/* who needs a reset? */
+
+inside {
+	margin:auto;
+	width:960px;
+}
+#banner,
+.galerie {
+	height: 400px;
+	position: relative;
+	background-size:cover;
+	overflow:hidden;
+}
+#banner .item,
+.galerie .item {
+	position:absolute;
+	top:0;
+	left: 0;
+	width: 100%;
+	height:100%;
+	background-size:cover;
+}
+.slider-nav {
+	width:30px;
+	height:30px;
+	background:#fff url(images/slider-arrows.png) no-repeat;
+	background-size:cover;
+	z-index: 100;
+	position:absolute;
+	opacity:0;
+	-webkit-transition: 0.2s;
+	-moz-transition: 0.2s;
+	-ms-transition: 0.2s;
+	-o-transition: 0.2s;
+	transition: 0.2s;
+}
+#banner:hover .slider-nav {
+	opacity:.5;
+	background-color:#fff;
+}
+.slider-nav:hover {
+	opacity:1 !important;
+	cursor:pointer;
+}
+#prev {
+	left:0;
+	margin:185px 0 0;
+	background-position:0 0;
+}
+#next {
+	right:0;
+	margin:185px 0 0;
+	background-position:-30px 0;
+}
+#banner inside { text-align: center; color: #fff; height: 100%; display: table; }
+#banner .text { 
+	display: table-cell; 
+	vertical-align: middle; 
+	height: auto; 
+	/*text-shadow: 1px 1px 0 rgba(0,0,0,0.4), 0 0 10px rgba(0,0,0,1);*/
+}
+#banner h1 {
+	/*margin:0 230px;*/
+	color: #fff;
+	margin-bottom:20px;
+	font-weight:300;
+	font-size: 45px;
+	position: relative;
+	font-family: Georgia, Times New Roman, Serif;
+	display: inline-block;
+	background-color:#211d10;
+	padding:10px 20px;
+	max-width:75%;
+}
+#banner p {
+	display:inline-block;
+	font-size:21px;
+	margin: 0;
+	background-color:#fff;
+	color:#000;
+	padding-left:20px;
+}
+#banner p a {
+	margin:0 0 0 10px;
+	padding:10px 20px;
+	background-color:#a60000;
+	color:#fff;
+	display:inline-block;
+}
+#banner a:hover {
+	background-color:#ac8e30;
+	color:#fff;
+	text-decoration: none;
+}
