@@ -1,45 +1,64 @@
 var kino = (function(){
-
-  var swfCDN = 'http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js';
-
+  // globals
+  var ids = [];
+  var videoElements = document.getElementsByClassName('kvideo');
 
   function init(config) {
-    // build parameters object and merge with defaults
-    console.log(config);
+    // get video ids & length
+    var videos = getIDs();
+
+    // set active class to first element
+    videoElements[0].className+=' active';
+
+    // build main player
+    var container = document.getElementById('kino-container');
+    var iframe = document.createElement('iframe');
+    iframe.setAttribute('src', 'http://youtube.com/embed/'+videos[0]);
+    iframe.setAttribute('frameborder', 0);
+    container.appendChild(iframe);
+
   }
 
   /////////////////////////////////
-  // LOAD SWF SCRIPT
+  // GET VIDEO IDS
   /////////////////////////////////
-  function loadSWFScript() {
-    $.getScript(swfCDN, buildPlayer(params))
+  function getIDs() {
+    for (var v = 0; v<videoElements.length; v++) {
+      // get ids
+      var id;
+      var url = videoElements[v].getAttribute('data-url');
+      var index = url.indexOf('?v=');
+      if(index!==-1) {
+        id = url.substring(index+3);
+        ids.push(id);
+      }
+
+      // then set list item widths
+      setThumbs(videoElements[v], videoElements.length, id);
+
+    }
+    return ids;
   }
 
   /////////////////////////////////
-  // BUILD PLAYER
+  // SET LIST ITEM THUMBS
   /////////////////////////////////
-  function buildPlayer(p) {
-    window.swfobject.embedSWF('http://www.youtube.com/v/PEX5EiRtnXo?enablejsapi=1&playerapiid=ytplayer&version=3', "kino-container", "625", "400", "8", null, null, {
-        allowScriptAccess: "always"
-      }, {
-        id: 'kino-video-player'
-      });
-    // console.log(playerID);
+  function setThumbs(elem, len, id) {
+    // update length
+    elem.style['width'] = 100/len + '%';
+
+    // update 
+    elem.style['float'] = 'left';
+
+    // add image
+    var img = document.createElement('img');
+    img.src = 'http://img.youtube.com/vi/'+id+'/0.jpg';
+    img.style['width'] = '100%';
+    img.style['height'] = 'auto';
+    elem.appendChild(img);
   }
 
-  /////////////////////////////////
-  // VIDEO PLAYER HANDLER ONCE READY (requires web server)
-  /////////////////////////////////
-  function onYouTubePlayerReady(playerId) {
-    kvp = document.getElementById(playerID);
-    console.log(kvp);
-  }
 
-  /////////////////////////////////
-  // strip the video ID from the URL provided by the user
-  /////////////////////////////////
-  function getVideoID(url) {
-  }
   
   /////////////////////////////////
   // ERROR HANDLER
