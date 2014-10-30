@@ -24,24 +24,25 @@ module.exports = function(grunt) {
         }
       }
     },
-    watch: {
-      scripts: {
-        files: 'src/*.*',
-        tasks: ['lint', 'clean'],
+    cssmin: {
+      add_banner: {
         options: {
-          event: [ 'changed', 'added', 'deleted'],
+          banner: "/*! <%= pkg.name %> v<%= pkg.version%> */"
         },
-      },
+        files: {
+          'dist/<%= pkg.name %>.min.css': ['src/<%= pkg.name%>.css']
+        }
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
+
 
   // Default task(s).
   grunt.registerTask('lint', ['jshint']);
-  grunt.registerTask('default', ['jshint' ,'uglify']);
-  grunt.registerTask('watcher', ['watch']);
+  grunt.registerTask('default', ['jshint','uglify','cssmin']);
 
 };

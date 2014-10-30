@@ -1,0 +1,33 @@
+#kino {}
+
+.kino-player {
+  padding-bottom:56.25%;
+  position:relative;
+  width:100%;
+  background:#000000;
+}
+.kino-player iframe {
+  position:absolute;
+  width:100%;
+  height:100%;
+}
+.kino-video-list { 
+  list-style-type: none;
+  margin:0;
+  padding:0;
+}
+.kino-video-thumb {
+  border-top:3px solid #ffffff;
+  float: left;
+  cursor:pointer;
+}
+.kino-video-thumb:hover {
+  border-top-color:#c0c0c0;
+}
+.kino-video-thumb.active {
+  border-top-color:steelblue;
+}
+.kino-video-thumb img {
+  width:100%;
+  height:auto;
+}

@@ -1,64 +1,138 @@
 var kino = (function(){
-  // globals
-  var ids = [];
-  var videoElements = document.getElementsByClassName('kvideo');
+
+  var k; // #kino
+  var len; // number of videos in 'videos' parameter
+  var iframe; // sets iframe globally so we can change parameters on click interaction
+  var ids = []; // preparing list if IDs for usage across library
 
   function init(config) {
+
+    // set global variable from #kino element
+    k = document.getElementById("kino");
+
     // get video ids & length
-    var videos = getIDs();
+    len = config.videos.length;
 
-    // set active class to first element
-    videoElements[0].className+=' active';
+    // get ids
+    ids = getIDs(config.videos);
 
-    // build main player
-    var container = document.getElementById('kino-container');
-    var iframe = document.createElement('iframe');
-    iframe.setAttribute('src', 'http://youtube.com/embed/'+videos[0]);
-    iframe.setAttribute('frameborder', 0);
-    container.appendChild(iframe);
+    // create main player
+    buildKinoPlayer();
+
+    // create thumbnails
+    thumbsCreate(ids);
 
   }
 
   /////////////////////////////////
   // GET VIDEO IDS
   /////////////////////////////////
-  function getIDs() {
-    for (var v = 0; v<videoElements.length; v++) {
+  function getIDs(videos) {
+    for (var v = 0; v<len; v++) {
       // get ids
-      var id;
-      var url = videoElements[v].getAttribute('data-url');
-      var index = url.indexOf('?v=');
+      var id,
+          url = videos[v],
+          index = url.indexOf("?v=");
       if(index!==-1) {
         id = url.substring(index+3);
         ids.push(id);
       }
-
-      // then set list item widths
-      setThumbs(videoElements[v], videoElements.length, id);
-
     }
     return ids;
   }
 
   /////////////////////////////////
-  // SET LIST ITEM THUMBS
+  // BUILD MAIN PLAYER
   /////////////////////////////////
-  function setThumbs(elem, len, id) {
-    // update length
-    elem.style['width'] = 100/len + '%';
+  function buildKinoPlayer() {
+    // kino-player container (used for sizing the iframe)
+    var kinoPlayer = document.createElement("div");
+    kinoPlayer.className = "kino-player";
 
-    // update 
-    elem.style['float'] = 'left';
+    // kino embed from youtube
+    iframe = document.createElement('iframe');
+    iframe.setAttribute("src", "http://youtube.com/embed/"+ids[0]);
+    iframe.setAttribute("frameborder", 0);
 
-    // add image
-    var img = document.createElement('img');
-    img.src = 'http://img.youtube.com/vi/'+id+'/0.jpg';
-    img.style['width'] = '100%';
-    img.style['height'] = 'auto';
-    elem.appendChild(img);
+    // append objects to #kino
+    kinoPlayer.appendChild(iframe);
+    k.appendChild(kinoPlayer);
   }
 
+  /////////////////////////////////
+  // THUMBNAILS / KINO VIDEO LIST
+  /////////////////////////////////
+  function thumbsCreate(ids) {
+    // create thumbsList
+    var thumbList = document.createElement("ol");
+    thumbList.className = "kino-video-list";
 
+    // create thumbnail for each id, append to thumblist
+    for (var i = 0; i<len; i++) {
+      thumbList.appendChild(thumb(ids[i]));
+    }
+
+    // set active class to first element
+    var first = thumbList.getElementsByTagName("li")[0];
+    first.className+=" active";
+
+    // append thumbs to kino element
+    k.appendChild(thumbList);
+  }
+
+  /////////////////////////////////
+  // CREATE THUMBNAIL
+  /////////////////////////////////
+  function thumb(id) {
+    // create kino-video-thumb element
+    var kinoThumb = document.createElement("li");
+    kinoThumb.className = "kino-video-thumb";
+
+    // create custom data-videoID attribute
+    var videoIdAttr = document.createAttribute("data-videoID");
+    videoIdAttr.value = id;
+    kinoThumb.setAttributeNode(videoIdAttr);
+
+    // set width of thumb based on number of videos
+    kinoThumb.style.width = 100/len + "%";
+
+    // add click event handler thumbClick()
+    kinoThumb.addEventListener("click", thumbClick);
+
+    // thumbnail image
+    var img = document.createElement("img");
+    img.src = "http://img.youtube.com/vi/"+id+"/mqdefault.jpg";
+    kinoThumb.appendChild(img);
+
+    return kinoThumb;
+  }
+
+  /////////////////////////////////
+  // THUMBNAIL CLICK HANDLER
+  /////////////////////////////////
+  function thumbClick() {
+    var classString = this.className;
+    var isActive = (classString.indexOf("active") !== -1 ? true : false);
+    if(!isActive) {
+
+      // set main frame
+      var vID = this.getAttribute("data-videoID");
+      iframe.setAttribute("src", "http://youtube.com/embed/"+vID);
+
+      // update className
+      activeReset(this);
+
+    }
+
+    // updates active .kino-video-thumb
+    function activeReset(t) {
+      var thumbs = document.getElementsByClassName("kino-video-thumb");
+      for(var a=0; a<len; a++) {
+        thumbs[a].className = "kino-video-thumb";
+      }
+      t.className = "kino-video-thumb active";
+    }    
+  }
   
   /////////////////////////////////
   // ERROR HANDLER
